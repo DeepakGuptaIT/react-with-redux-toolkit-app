@@ -5,14 +5,70 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import Root, {
+  loader as rootLoader, action as rootAction,
+} from "./routes/root";
+import ErrorPage from './error-page';
+import Contact, {
+  loader as contactLoader,
+} from './routes/contact';
+import { Counter } from './features/counter/Counter';
+import EditContact, {
+  action as editAction,
+} from "./routes/edit";
+import { action as destroyAction } from "./routes/destroy";
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    loader: rootLoader,
+    action: rootAction,
+    children: [
+      {
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <App />
+          },
+          {
+            path: "contacts/:contactId",
+            element: <Contact />,
+            loader: contactLoader,
+          },
+          {
+            path: "contacts/:contactId/edit",
+            element: <EditContact />,
+            loader: contactLoader,
+            action: editAction
+          },
+          {
+            path: "contacts/:contactId/destroy",
+            action: destroyAction,
+          },
+
+        ]
+      }
+
+    ]
+  },
+
+]);
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      {/* <App /> */}
+      <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
 );

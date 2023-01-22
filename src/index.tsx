@@ -5,14 +5,45 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import Root, { loader as rootLoader, action as rootAction, } from "./routes/root";
+import ErrorPage from './error-page';
+import Contact from './routes/contact';
+import { Counter } from './features/counter/Counter';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    loader: rootLoader,
+    action: rootAction,
+    children: [
+      {
+        index: true,
+        element: <App />
+      },
+      {
+        path: "contacts/:contactId",
+        element: <Contact />
+      },
+
+    ]
+  },
+
+]);
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      {/* <App /> */}
+      <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
 );

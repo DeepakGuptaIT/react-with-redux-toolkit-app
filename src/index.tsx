@@ -21,6 +21,7 @@ import EditContact, {
   action as editAction,
 } from "./routes/edit";
 import { action as destroyAction } from "./routes/destroy";
+import TodoList from './features/todos/TodoList';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <App />
+          },
+          {
+            path: "todos",
+            element: <TodoList />,
           },
           {
             path: "contacts/:contactId",

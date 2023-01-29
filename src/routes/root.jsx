@@ -1,6 +1,8 @@
-import { Outlet, Link, useLoaderData, Form, NavLink, useNavigation, redirect, useSubmit, } from "react-router-dom";
+import { Outlet, useLoaderData, Form, NavLink, useNavigation, redirect, useSubmit, } from "react-router-dom";
 import { getContacts, createContact } from "../contacts";
 import { useEffect } from "react";
+
+
 
 export async function action() {
     const contact = await createContact();
@@ -8,10 +10,6 @@ export async function action() {
     return redirect(`/contacts/${contact.id}/edit`);
 }
 
-// export async function loader() {
-//     const contacts = await getContacts();
-//     return { contacts };
-// }
 
 export async function loader({ request }) {
     const url = new URL(request.url);
@@ -33,6 +31,17 @@ export default function Root() {
         new URLSearchParams(navigation.location.search).has(
             "q"
         );
+
+    const routerList = [
+        {
+            path: "/",
+            name: "Counter Demo"
+        },
+        {
+            path: "/todos",
+            name: "Todo List"
+        }
+    ]
     return (
         <>
             <div id="sidebar">
@@ -71,21 +80,22 @@ export default function Root() {
                 </div>
                 <nav>
                     <ul>
-                        <li>
-                            {/* <Link to={`/`}>Counter Demo</Link> */}
-                            <NavLink
-                                to={`/`}
-                                className={({ isActive, isPending }) =>
-                                    isActive
-                                        ? "active"
-                                        : isPending
-                                            ? "pending"
-                                            : ""
-                                }
-                            >Counter Demo
-                                {/* other code */}
-                            </NavLink>
-                        </li>
+                        {routerList.map((item) => (
+                            <li key={item.path}>
+                                <NavLink
+                                    to={item.path}
+                                    className={({ isActive, isPending }) =>
+                                        isActive
+                                            ? "active"
+                                            : isPending
+                                                ? "pending"
+                                                : ""
+                                    }
+                                >{item.name}
+                                </NavLink>
+                            </li>
+                        ))
+                        }
 
                         {contacts.length ? (
                             <>
